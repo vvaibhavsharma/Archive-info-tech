@@ -5,8 +5,9 @@ import java.awt.event.ActionListener;
 
 public class TimerApp {
     private static long elapsedTime = 0;
-    private static boolean running = false;
+    private static boolean running = true; // Starts automatically
     private static Timer timer;
+    private static JLabel timeLabel;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -15,27 +16,24 @@ public class TimerApp {
             frame.setSize(300, 150);
             frame.setLayout(new FlowLayout());
 
-            JLabel timeLabel = new JLabel("Elapsed Time: 0 seconds");
+            timeLabel = new JLabel("Elapsed Time: 0 seconds");
             JButton runButton = new JButton("Run");
             JButton pauseButton = new JButton("Pause");
 
-            runButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (!running) {
-                        running = true;
-                        startTimer();
-                    }
+            // Automatically start the timer
+            startTimer();
+
+            runButton.addActionListener(e -> {
+                if (!running) {
+                    running = true;
+                    startTimer(); // Resume the timer
                 }
             });
 
-            pauseButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (running) {
-                        running = false;
-                        timer.stop();
-                    }
+            pauseButton.addActionListener(e -> {
+                if (running) {
+                    running = false;
+                    timer.stop(); // Pause the timer
                 }
             });
 
@@ -56,10 +54,6 @@ public class TimerApp {
     }
 
     private static void updateTimerDisplay() {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor((Component) timer.getActionListeners()[0]);
-            JLabel timeLabel = (JLabel) frame.getContentPane().getComponent(0);
-            timeLabel.setText("Elapsed Time: " + elapsedTime + " seconds");
-        });
+        timeLabel.setText("Elapsed Time: " + elapsedTime + " seconds");
     }
 }
